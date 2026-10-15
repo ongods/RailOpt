@@ -1,0 +1,27 @@
+parameter,symbol,unit,status,value,applicability,source_url,source_locator,qualification_or_next_action
+Reference configuration,consist,text,published specification,MC1-M1-M2-MC2,LRT-2 original configuration documented 2011,https://openjicareport.jica.go.jp/pdf/1000023377_01.pdf,Table 3.6-2 PDF page 160,Historical configuration; visually verify original table before freeze
+Empty train mass,m0,kg,published specification,160100,LRT-2 reference four-car train,https://openjicareport.jica.go.jp/pdf/1000023377_01.pdf,Table 3.6-1 PDF page 159,Converted from 160.10 t; visually verify before freeze
+Passenger mass convention,mp,kg/person,published specification,65,JICA 2011 loading calculation,https://openjicareport.jica.go.jp/pdf/1000023377_01.pdf,Text above Table 3.6-1 PDF page 159,Source assumption rather than observed passenger mass; include luggage convention explicitly
+Reference passenger count,N,person,assumed,826,Scenario using historical standard-loading count,https://openjicareport.jica.go.jp/pdf/1000023377_01.pdf,Tables 3.4-8 and 3.6-1,Not measured occupancy; avoid unresolved AW2 count conflict
+Reference loaded mass,m,kg,derived,213790,Constant within one reference segment,https://openjicareport.jica.go.jp/pdf/1000023377_01.pdf,160100 + 826 * 65,Recompute for each load scenario
+Published maximum speed,v_spec,m/s,published specification,22.2222222222,LRT-2 historical specification,https://openjicareport.jica.go.jp/pdf/1000023377_01.pdf,Table 3.6-2 PDF page 160,80 km/h divided by 3.6; does not establish local operating limits
+Published acceleration anchor,a_spec,m/s^2,published specification,1.3,LRT-2 historical specification,https://openjicareport.jica.go.jp/pdf/1000023377_01.pdf,Table 3.6-2 PDF page 160,4.68 km/h/s divided by 3.6; load and speed range not established
+Published average deceleration anchor,b_spec,m/s^2,published specification,1.3,LRT-2 historical specification,https://openjicareport.jica.go.jp/pdf/1000023377_01.pdf,Table 3.6-2 PDF page 160,Does not establish full service-brake envelope or regen performance
+Equivalent rotating mass,m_rot,kg,unresolved,,Selected train,,,Assume transparently or derive from component inertias; exclude passengers from rotating mass
+Low-speed wheel tractive force,F0,N,unresolved,,Selected train and reference conditions,,,Obtain OEM curve or constrain from known acceleration and load; label inferred value as assumed
+Maximum wheel traction power,P_w_max,W,unresolved,,Selected train and supply conditions,,,Verify motor count and rating duty plus mechanical boundary; do not substitute one motor rating
+Brake force envelope,F_B_max,N,unresolved,,Selected train and load,,,Define speed dependence and load compensation; service braking distinct from emergency
+Davis constant,A,N,unresolved,,Whole selected train,,,Require comparable-vehicle source or declared bounded assumption pending calibration
+Davis linear coefficient,B,N*s/m,unresolved,,Whole selected train,,,Must match speed and mass conventions of A and C
+Davis quadratic coefficient,C,N*s^2/m^2,unresolved,,Whole selected train,,,Avoid adding aerodynamic drag twice
+Track distances and stops,x_stops,m,unresolved,,One selected interstation section,,,Obtain rail chainage; distinguish stopping marks from map station centroids
+Rail height profile,h,m,unresolved,,One selected interstation section,,,Ground terrain elevation is insufficient for elevated or underground alignment
+Local permissible speeds,v_lim,m/s,unresolved,,Chosen section direction and operating period,,,Published maximum speed is only an outer bound
+Extra curve or tunnel resistance,F_C,N,unresolved,,Chosen section,,,Declare zero only as an explicit omission or synthetic-route assumption
+Traction adhesion bound,mu_T,dimensionless,unresolved,,Optional explicit adhesion model,,,Needed with powered supported mass if independently imposing an adhesion cap
+Brake adhesion bound,mu_B,dimensionless,unresolved,,Optional explicit adhesion model,,,Needed with braked supported mass if independently imposing an adhesion cap
+Traction conversion efficiency,eta_T,dimensionless,unresolved,,Optional electrical-energy model,,,Declare electrical boundary; use scenario values without claiming measured efficiency
+Auxiliary power,P_aux,W,unresolved,,Optional electrical-energy model,,,Include HVAC and dwell energy for comparisons at the stated boundary
+Regeneration conversion efficiency,eta_R,dimensionless,unresolved,,Optional electrical-energy model,,,Needs speed-dependent regenerative capability and low-speed cutoff
+Network acceptance,q,dimensionless,assumed,0,Initial no-accepted-recovery scenario,,,Use ideal acceptance only as a separate bound; actual receptivity unresolved
+Independent validation trace,observations,text,unresolved,,Same vehicle route loading and period,,,Specifications are plausibility anchors; need held-out measurements for physical validation
