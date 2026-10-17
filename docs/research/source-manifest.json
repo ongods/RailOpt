@@ -1,0 +1,89 @@
+[
+  {
+    "source_id": "jica-2011-lrt2",
+    "url": "https://openjicareport.jica.go.jp/pdf/1000023377_01.pdf",
+    "checked_at_utc": "2026-10-17T07:23:23.974177+00:00",
+    "status": "cached",
+    "sha256": "effac040d8a1bdca33b973b93bb5b30768cae14ed1f8d2a5dea59c5882db2361",
+    "bytes": 6236121,
+    "cache_path": ".cache/research/jica-2011-lrt2.pdf"
+  },
+  {
+    "source_id": "lrta-2017-maintenance-tor",
+    "url": "https://publiccontent.sinpro.cz/PublicFiles/2017/11/26/PB17-167-8.Bidding%20Document.072523311.pdf",
+    "checked_at_utc": "2026-10-17T07:23:23.974241+00:00",
+    "status": "unavailable",
+    "error": "404 Client Error: Not Found for url: https://publiccontent.sinpro.cz/PublicFiles/2017/11/26/PB17-167-8.Bidding%20Document.072523311.pdf"
+  },
+  {
+    "source_id": "lrta-2017-maintenance-tor-archived",
+    "url": "https://web.archive.org/web/20200612124628id_/http://publiccontent.sinpro.cz/PublicFiles/2017/11/26/PB17-167-8.Bidding%20Document.072523311.pdf",
+    "checked_at_utc": "2026-10-17T07:23:25.524699+00:00",
+    "status": "unavailable",
+    "error": "HTTPSConnectionPool(host='web.archive.org', port=443): Max retries exceeded with url: /web/20200612124628id_/http://publiccontent.sinpro.cz/PublicFiles/2017/11/26/PB17-167-8.Bidding%20Document.072523311.pdf (Caused by NameResolutionError(\"<urllib3.connection.HTTPSConnection object at 0x000001C62ADF6D50>: Failed to resolve 'web.archive.org' ([Errno 11001] getaddrinfo failed)\"))"
+  },
+  {
+    "source_id": "lrta-2020-west-extension",
+    "url": "https://www.lrta.gov.ph/wp-content/uploads/2021/04/7203775.pdf",
+    "checked_at_utc": "2026-10-17T07:23:25.535154+00:00",
+    "status": "unavailable",
+    "error": "404 Client Error: Not Found for url: https://www.lrta.gov.ph/wp-content/uploads/2021/04/7203775.pdf"
+  },
+  {
+    "source_id": "lrta-2022-propulsion-tender",
+    "url": "https://www.lrta.gov.ph/wp-content/uploads/2022/06/8763449.pdf",
+    "checked_at_utc": "2026-10-17T07:23:26.577923+00:00",
+    "status": "unavailable",
+    "error": "404 Client Error: Not Found for url: https://www.lrta.gov.ph/wp-content/uploads/2022/06/8763449.pdf"
+  },
+  {
+    "source_id": "lrta-2021-foi-rolling-stock",
+    "url": "https://www.foi.gov.ph/documents/51680/img-125091420.pdf",
+    "checked_at_utc": "2026-10-17T07:23:27.580833+00:00",
+    "status": "unavailable",
+    "error": "403 Client Error: Forbidden for url: https://www.foi.gov.ph/documents/51680/img-125091420.pdf"
+  },
+  {
+    "source_id": "toshiba-2003-highlights",
+    "url": "https://www.global.toshiba/content/dam/toshiba/migration/corp/techReviewAssets/tech/review/2003/high2003/high2003pdf/0305.pdf",
+    "checked_at_utc": "2026-10-17T07:23:27.947125+00:00",
+    "status": "cached",
+    "sha256": "e8740160aa14b452ce52c607cecb59d6ad7def8ba49c01a153a31ddb0548dd0c",
+    "bytes": 384202,
+    "cache_path": ".cache/research/toshiba-2003-highlights.pdf"
+  },
+  {
+    "source_id": "depdev-2020-lrt2-impact-evaluation",
+    "url": "https://nep.depdev.gov.ph/storage/document/1606724568_Impact%20Evaluation_LRT%202%20Project_Final%20Report.pdf",
+    "checked_at_utc": "2026-10-17T07:40:23.882509+00:00",
+    "status": "unavailable",
+    "error": "HTTPSConnectionPool(host='nep.depdev.gov.ph', port=443): Max retries exceeded with url: /storage/document/1606724568_Impact%20Evaluation_LRT%202%20Project_Final%20Report.pdf (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1032)')))"
+  },
+  {
+    "source_id": "denr-2020-lrt2-west-eis",
+    "url": "https://eia.emb.gov.ph/wp-content/uploads/2020/12/revised-EIS.pdf",
+    "checked_at_utc": "2026-10-17T07:40:24.335526+00:00",
+    "status": "unavailable",
+    "error": "403 Client Error: Forbidden for url: https://eia.emb.gov.ph/wp-content/uploads/2020/12/revised-EIS.pdf"
+  },
+  {
+    "source_id": "jica-lrt2-japanese-report",
+    "url": "https://openjicareport.jica.go.jp/pdf/1000023375.pdf",
+    "checked_at_utc": "2026-10-17T07:41:33.266930+00:00",
+    "final_url": "https://openjicareport.jica.go.jp/pdf/1000023375.pdf",
+    "status": "cached",
+    "sha256": "3adbf2399c9db3207452cd1a2d607d9dcbcfac55384697e09fe92c4c5fad4d67",
+    "bytes": 10344513,
+    "cache_path": ".cache/research/jica-lrt2-japanese-report.pdf"
+  },
+  {
+    "source_id": "jica-2011-lrt2-part2",
+    "url": "https://openjicareport.jica.go.jp/pdf/1000023377_02.pdf",
+    "checked_at_utc": "2026-10-17T07:43:10.466532+00:00",
+    "final_url": "https://openjicareport.jica.go.jp/pdf/1000023377_02.pdf",
+    "status": "cached",
+    "sha256": "9298b01f18714df95e777e7082e07966248a240424e3e84c087cb2acd77bff3d",
+    "bytes": 5904745,
+    "cache_path": ".cache/research/jica-2011-lrt2-part2.pdf"
+  }
+]

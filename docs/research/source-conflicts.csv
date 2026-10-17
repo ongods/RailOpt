@@ -1,0 +1,3 @@
+source_id,locator,pdf_page,field,reported_components,reported_total,component_sum,reported_total_minus_sum,decision
+jica-2011-lrt2,Table 3.6-1,159,AW2 passenger count,247 + 266 + 266 + 247,1030,1026,4,Exclude AW2 from reference scenario; do not silently repair source
+jica-2011-lrt2,Table 3.6-2,160,AW2 total passenger count,247 + 268 + 268 + 247,1026,1030,-4,Exclude AW2 from reference scenario; do not silently repair source

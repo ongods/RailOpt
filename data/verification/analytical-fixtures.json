@@ -1,0 +1,71 @@
+{
+  "purpose": "Independent analytical expectations for numerical verification; not operational train predictions",
+  "units": "SI",
+  "cases": [
+    {
+      "id": "constant-force-from-rest",
+      "mass_kg": 200000,
+      "rotating_mass_kg": 0,
+      "traction_force_n": 200000,
+      "brake_force_n": 0,
+      "resistance_n": 0,
+      "grade_fraction": 0,
+      "initial_speed_mps": 0,
+      "duration_s": 10,
+      "expected_speed_mps": 10,
+      "expected_distance_m": 50,
+      "expected_traction_work_j": 10000000
+    },
+    {
+      "id": "constant-brake-to-rest",
+      "mass_kg": 200000,
+      "rotating_mass_kg": 0,
+      "traction_force_n": 0,
+      "brake_force_n": 200000,
+      "resistance_n": 0,
+      "grade_fraction": 0,
+      "initial_speed_mps": 20,
+      "expected_stop_time_s": 20,
+      "expected_stop_distance_m": 200,
+      "expected_brake_work_j": 40000000
+    },
+    {
+      "id": "level-coast-constant-resistance",
+      "mass_kg": 200000,
+      "rotating_mass_kg": 0,
+      "traction_force_n": 0,
+      "brake_force_n": 0,
+      "resistance_n": 10000,
+      "grade_fraction": 0,
+      "initial_speed_mps": 20,
+      "duration_s": 10,
+      "expected_speed_mps": 19.5,
+      "expected_distance_m": 197.5,
+      "expected_resistance_work_j": 1975000
+    },
+    {
+      "id": "lossless-downhill-coast",
+      "mass_kg": 200000,
+      "rotating_mass_kg": 10000,
+      "traction_force_n": 0,
+      "brake_force_n": 0,
+      "resistance_n": 0,
+      "initial_speed_mps": 10,
+      "height_change_m": -5,
+      "expected_final_speed_squared_m2ps2": 193.39666666666668,
+      "expected_potential_energy_change_j": -9806650
+    },
+    {
+      "id": "constant-power-above-transition",
+      "mass_kg": 200000,
+      "rotating_mass_kg": 0,
+      "maximum_force_n": 200000,
+      "wheel_power_w": 1000000,
+      "resistance_n": 0,
+      "initial_speed_mps": 10,
+      "duration_s": 10,
+      "expected_final_speed_squared_m2ps2": 200,
+      "expected_traction_work_j": 10000000
+    }
+  ]
+}

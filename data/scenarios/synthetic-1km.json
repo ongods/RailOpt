@@ -1,0 +1,48 @@
+{
+  "scenario_id": "synthetic-lrt2-mass-1km-v1",
+  "scope": "Hypothetical mechanics study using a historical LRT-2 mass convention. Not an actual route or calibrated fleet prediction.",
+  "units": "SI: m, s, kg, N, W, J",
+  "reference_file": "data/reference/lrt2-2011.json",
+  "mass_basis": {
+    "empty_mass_kg": 160100,
+    "passengers": 826,
+    "passenger_mass_kg": 65,
+    "rotating_fraction_of_tare": 0.10
+  },
+  "vehicle": {
+    "mass_kg": 213790,
+    "rotating_mass_kg": 16010,
+    "traction_force_n": 280000,
+    "wheel_power_w": 1500000,
+    "service_brake_force_n": 280000,
+    "davis_a_n": 4000,
+    "davis_b_ns_per_m": 80,
+    "davis_c_ns2_per_m2": 15
+  },
+  "route": {
+    "rail_points_m": [[0, 0], [200, 0], [450, 2.5], [700, 2.5], [1000, 0]],
+    "speed_limits_mps": [[0, 20], [650, 12], [850, 16]]
+  },
+  "control": {"initial_speed_mps": 0, "coast_from_m": 500, "maximum_time_s": 3600},
+  "settings": {
+    "max_step_s": 0.25,
+    "rtol": 1e-9,
+    "position_atol_m": 1e-8,
+    "speed_atol_mps": 1e-9,
+    "work_atol_j": 0.001,
+    "planning_step_m": 5.0
+  },
+  "evidence": {
+    "mass_kg": {"status": "derived", "basis": "160100 + 826 * 65; occupancy and per-person mass are scenario conventions", "source": "docs/parameter-register.csv"},
+    "rotating_mass_kg": {"status": "hypothetical", "basis": "0.10 times historical tare mass; not measured inertia"},
+    "traction_force_n": {"status": "hypothetical", "basis": "Finite wheel-force stress setting; not inferred from the AW3 acceleration rating"},
+    "wheel_power_w": {"status": "hypothetical", "basis": "Mechanical wheel power stress setting; not aggregated motor ratings"},
+    "service_brake_force_n": {"status": "hypothetical", "basis": "Constant whole-train wheel-brake force; no emergency rating substitution or load-compensation law"},
+    "davis_a_n": {"status": "hypothetical", "basis": "Whole-train coefficient in N"},
+    "davis_b_ns_per_m": {"status": "hypothetical", "basis": "Whole-train coefficient in N s/m"},
+    "davis_c_ns2_per_m2": {"status": "hypothetical", "basis": "Whole-train coefficient in N s^2/m^2; includes aerodynamic resistance"},
+    "route": {"status": "hypothetical", "basis": "Synthetic 1000 m along-track profile and spatial speed limits; not a named interstation section"},
+    "control": {"status": "hypothetical", "basis": "Forward departure from rest; coast request from 500 m subordinate to braking limits; timeout is a feasibility bound"},
+    "settings": {"status": "numerical choice", "basis": "DOP853 tolerances and maximum time/distance steps; tested by refinement"}
+  }
+}
