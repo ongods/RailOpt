@@ -1,1 +1,1 @@
-"""Single-train longitudinal mechanics; no fleet calibration or electrical model."""
+"""Single-train mechanics and optional terminal energy accounts; no fleet calibration."""

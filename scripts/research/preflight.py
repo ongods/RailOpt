@@ -74,7 +74,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, help="Optional directory for generated screening CSVs")
     args = parser.parse_args()
-    ref = json.loads((ROOT / "data/reference/lrt2-2011.json").read_text(encoding="utf-8"))
+    ref = json.loads((ROOT / "data/reference/lrt2-vehicle.json").read_text(encoding="utf-8"))
     check_close(sum(ref["empty_car_masses_kg"]), ref["empty_train_mass_kg"])
     check_close(4.68 / 3.6, ref["acceleration_anchor_mps2"])
     fixture_count = check_fixtures()

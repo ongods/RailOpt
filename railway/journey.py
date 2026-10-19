@@ -11,6 +11,7 @@ from typing import Callable
 import numpy as np
 from scipy.integrate import solve_ivp
 
+from .electrical import ElectricalEnergy, ElectricalParameters, electrical_energy
 from .integration import SegmentResult, Settings, energy_residual_j, integrate_segment
 from .physics import Command, G, InfeasibleRun, Vehicle, finite, forces
 
@@ -83,13 +84,14 @@ def _spatial_solve(rhs, start, end, w0, settings, event=None):
     solution = solve_ivp(rhs, (start, end), [w0], method="DOP853", dense_output=True,
                          events=event, rtol=settings.rtol, atol=settings.speed_atol_mps**2 + 1e-9,
                          max_step=settings.planning_step_m)
-    if not solution.success or not np.isfinite(solution.y).all():
-        raise InfeasibleRun(f"Spatial planning failed: {solution.message}")
+    if not solution.success or not np.isfinite(solution.y).all() or not np.isfinite(solution.t).all():
+        raise RuntimeError(f"Spatial planning failed: {solution.message}")
     return solution
 
 
 def braking_bands(vehicle: Vehicle, route: Route, settings: Settings,
-                  extra_breaks: tuple[float, ...] = ()) -> list[BrakingBand]:
+                  extra_breaks: tuple[float, ...] = (),
+                  cruise_speed_cap_mps: float | None = None) -> list[BrakingBand]:
     """Construct a speed-limited maximum-service-braking envelope backward from rest.
 
     This first planner conservatively requires positive net braking at zero speed
@@ -101,7 +103,8 @@ def braking_bands(vehicle: Vehicle, route: Route, settings: Settings,
     w_right = 0.0
     for left, right in reversed(list(zip(breaks, breaks[1:]))):
         slope = route.slope((left + right) / 2)
-        cap2 = route.speed_limit_mps((left + right) / 2)**2
+        cap = route.speed_limit_mps((left + right) / 2)
+        cap2 = min(cap, cruise_speed_cap_mps if cruise_speed_cap_mps is not None else cap)**2
         gravity = vehicle.mass_kg * G * slope
         if vehicle.service_brake_force_n + vehicle.resistance_n(0) + gravity <= 0:
             raise InfeasibleRun("Planner requires positive service-braking deceleration on every grade")
@@ -132,14 +135,27 @@ def braking_bands(vehicle: Vehicle, route: Route, settings: Settings,
     return sorted(bands, key=lambda b: b.start_m)
 
 
-def plan_journey(vehicle: Vehicle, route: Route, *, initial_speed_mps: float = 0.0,
-                 coast_from_m: float | None = None, settings: Settings = Settings()) -> list[Phase]:
+def validate_speed_cap(cruise_speed_cap_mps, initial_speed_mps):
+    """An optional positive command ceiling; reject an initially overspeed state."""
     finite("initial_speed_mps", initial_speed_mps, 0)
+    if cruise_speed_cap_mps is not None:
+        finite("cruise_speed_cap_mps", cruise_speed_cap_mps, 0)
+        if cruise_speed_cap_mps == 0:
+            raise ValueError("cruise_speed_cap_mps must be positive")
+        if initial_speed_mps > cruise_speed_cap_mps:
+            raise InfeasibleRun("Initial speed exceeds the commanded cruise ceiling")
+
+
+def plan_journey(vehicle: Vehicle, route: Route, *, initial_speed_mps: float = 0.0,
+                 coast_from_m: float | None = None, cruise_speed_cap_mps: float | None = None,
+                 settings: Settings = Settings()) -> list[Phase]:
+    validate_speed_cap(cruise_speed_cap_mps, initial_speed_mps)
     if coast_from_m is not None:
         finite("coast_from_m", coast_from_m, 0)
         if coast_from_m >= route.length_m:
             raise ValueError("Coasting switch must lie within the route")
-    bands = braking_bands(vehicle, route, settings, () if coast_from_m is None else (coast_from_m,))
+    bands = braking_bands(vehicle, route, settings, () if coast_from_m is None else (coast_from_m,),
+                          cruise_speed_cap_mps)
     w = initial_speed_mps**2
     if w > bands[0].squared_speed(0) + 1e-7:
         raise InfeasibleRun("Initial speed exceeds the braking envelope or local speed limit")
@@ -203,20 +219,26 @@ class JourneyResult:
     slopes: np.ndarray
     heights_m: np.ndarray
     energy_residual_j: np.ndarray
+    electrical: ElectricalEnergy | None = None
 
 
 def simulate_journey(vehicle: Vehicle, route: Route, *, initial_speed_mps: float = 0.0,
                      coast_from_m: float | None = None, maximum_time_s: float = 3600.0,
-                     settings: Settings = Settings()) -> JourneyResult:
+                     cruise_speed_cap_mps: float | None = None,
+                     settings: Settings = Settings(),
+                     electrical: ElectricalParameters | None = None) -> JourneyResult:
     """Replay a plan in time, preserving terminal position/speed errors for checking."""
     finite("maximum_time_s", maximum_time_s, 0)
     if maximum_time_s == 0:
         raise ValueError("maximum_time_s must be positive")
     phases = plan_journey(vehicle, route, initial_speed_mps=initial_speed_mps,
-                          coast_from_m=coast_from_m, settings=settings)
+                          coast_from_m=coast_from_m, cruise_speed_cap_mps=cruise_speed_cap_mps,
+                          settings=settings)
     state = np.array([0, initial_speed_mps, 0, 0, 0], dtype=float)
     time = 0.0
     segments, times, states, modes, slopes = [], [], [], [], []
+    electrical_samples = []
+    electrical_offset = np.zeros(3)
     for index, phase in enumerate(phases):
         if time >= maximum_time_s:
             raise InfeasibleRun("Maximum journey time exceeded")
@@ -226,22 +248,34 @@ def simulate_journey(vehicle: Vehicle, route: Route, *, initial_speed_mps: float
             duration_s=maximum_time_s - time, dh_ds=phase.dh_ds,
             initial_position_m=float(state[0]), initial_time_s=time,
             initial_work_j=tuple(state[2:]), end_position_m=None if last else phase.end_m,
-            settings=settings)
+            settings=settings, electrical=electrical)
         if segment.termination != ("stopped" if last else "position"):
             raise InfeasibleRun(f"Unexpected replay termination: {segment.termination}")
         # Keep a single sample at a switch, with the new phase's one-sided force.
         if times:
-            times.pop(); states.pop(); modes.pop(); slopes.pop()
+            times.pop()
+            states.pop()
+            modes.pop()
+            slopes.pop()
+            if electrical is not None:
+                electrical_samples.pop()
         times.extend(segment.time_s)
         states.extend(segment.states.T)
         modes.extend([phase.command.mode] * len(segment.time_s))
         slopes.extend([phase.dh_ds] * len(segment.time_s))
+        if electrical is not None:
+            cumulative = segment.electrical_integrals_j + electrical_offset[:, None]
+            electrical_samples.extend(cumulative.T)
+            electrical_offset = cumulative[:, -1]
         segments.append(segment)
         time, state = float(segment.time_s[-1]), segment.states[:, -1]
     array = np.asarray(states).T
     heights = np.array([route.height_m(float(x)) for x in array[0]])
     residual = energy_residual_j(vehicle, array, heights, initial_speed_mps, route.height_m(0))
     result = JourneyResult(segments, phases, np.asarray(times), array, modes, np.asarray(slopes), heights, residual)
+    if electrical is not None:
+        result.electrical = electrical_energy(electrical, result.time_s, array[2], array[3],
+                                              np.asarray(electrical_samples).T)
     speed_excess = max(float(v) - route.speed_limit_mps(float(x)) for x, v in zip(array[0], array[1]))
     energy_scale = max(float(np.max(np.abs(array[2:]))),
                        0.5 * vehicle.effective_mass_kg * float(np.max(np.abs(array[1]**2 - initial_speed_mps**2))),
@@ -250,6 +284,8 @@ def simulate_journey(vehicle: Vehicle, route: Route, *, initial_speed_mps: float
         raise InfeasibleRun("Terminal position or speed misses acceptance tolerance")
     if speed_excess > 0.05:
         raise InfeasibleRun("Replay exceeds a route speed restriction")
+    if cruise_speed_cap_mps is not None and float(array[1].max()) > cruise_speed_cap_mps + 0.05:
+        raise InfeasibleRun("Replay exceeds the commanded cruise ceiling")
     if float(np.max(np.abs(residual))) > 0.001 * energy_scale:
         raise RuntimeError("Mechanical energy balance exceeds acceptance tolerance")
     if abs(vehicle.mass_kg * G * route.slope(route.length_m)) > vehicle.service_brake_force_n:

@@ -7,6 +7,8 @@ from dataclasses import replace
 from pathlib import Path
 import unittest
 import tempfile
+from types import SimpleNamespace
+from unittest.mock import patch
 
 import numpy as np
 
@@ -27,6 +29,16 @@ def vehicle(**changes):
 
 
 class AnalyticalTests(unittest.TestCase):
+    def test_time_solver_failure_and_nonfinite_output_raise_runtime_error(self):
+        for success, time, state in ((False, 0.0, 0.0), (True, float("nan"), 0.0),
+                                     (True, 0.0, float("nan"))):
+            solution = SimpleNamespace(success=success, t=np.array([time]), y=np.full((5, 1), state),
+                                       message="injected time failure")
+            with self.subTest(success=success, time=time, state=state):
+                with patch("railway.integration.solve_ivp", return_value=solution):
+                    with self.assertRaisesRegex(RuntimeError, "Time integration failed"):
+                        integrate_segment(vehicle(), Command("traction"), initial_speed_mps=0, duration_s=1)
+
     def test_versioned_analytical_fixtures(self):
         cases = json.loads((ROOT / 'data/verification/analytical-fixtures.json').read_text())['cases']
         for case in cases:
@@ -96,6 +108,40 @@ class AnalyticalTests(unittest.TestCase):
 
 
 class JourneyTests(unittest.TestCase):
+    def test_commanded_ceiling_analytical_time_and_short_trip(self):
+        train = vehicle(mass_kg=1000, rotating_mass_kg=0, traction_force_n=1000,
+                        service_brake_force_n=1000, wheel_power_w=1e9,
+                        davis_a_n=0, davis_b_ns_per_m=0, davis_c_ns2_per_m2=0)
+        route = Route(((0, 0), (1000, 0)), ((0, 30),))
+        result = simulate_journey(train, route, cruise_speed_cap_mps=10)
+        # a=b=1: 50 m acceleration + 900 m cruise + 50 m braking.
+        self.assertAlmostEqual(result.time_s[-1], 110, places=5)
+        self.assert_run(train, route, result)
+        short = simulate_journey(train, Route(((0, 0), (10, 0)), ((0, 30),)), cruise_speed_cap_mps=10)
+        self.assertAlmostEqual(short.time_s[-1], 2 * math.sqrt(10), places=5)
+        self.assertNotIn("cruise", short.modes)
+
+    def test_ceiling_default_invalid_and_initial_overspeed(self):
+        route = Route(((0, 0), (100, 0)), ((0, 20),))
+        baseline = simulate_journey(vehicle(), route)
+        unset = simulate_journey(vehicle(), route, cruise_speed_cap_mps=None)
+        np.testing.assert_array_equal(baseline.states, unset.states)
+        for cap in (0, -1, float("nan"), float("inf")):
+            with self.subTest(cap=cap), self.assertRaises(ValueError):
+                simulate_journey(vehicle(), route, cruise_speed_cap_mps=cap)
+        with self.assertRaisesRegex(InfeasibleRun, "commanded"):
+            simulate_journey(vehicle(), route, initial_speed_mps=11, cruise_speed_cap_mps=10)
+
+    def test_ceiling_local_restriction_grades_and_downhill_coast(self):
+        train = vehicle()
+        route = Route(((0, 0), (200, 0), (600, -8), (1000, -10)),
+                      ((0, 20), (700, 7), (850, 20)))
+        result = simulate_journey(train, route, cruise_speed_cap_mps=10, coast_from_m=200)
+        self.assert_run(train, route, result)
+        self.assertLessEqual(result.states[1].max(), 10.00001)
+        self.assertTrue(any(mode == "cruise" and slope < 0
+                            for mode, slope in zip(result.modes, result.slopes)))
+
     def assert_run(self, train, route, result):
         x, speed, wt, wb, wr = result.states
         self.assertTrue(np.isfinite(result.states).all())

@@ -1,10 +1,11 @@
 """Event-aware time integration of motion and mechanical work on one slope."""
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 
 import numpy as np
 from scipy.integrate import solve_ivp
 
+from .electrical import ElectricalParameters, regenerative_powers
 from .physics import Command, G, InfeasibleRun, Vehicle, finite, forces
 
 
@@ -24,6 +25,19 @@ class Settings:
                 raise ValueError(f"{name} must be positive")
 
 
+def refined_settings(settings: Settings) -> Settings:
+    """Halve time/distance steps and tighten all solver tolerances tenfold."""
+    return replace(
+        settings,
+        max_step_s=settings.max_step_s / 2,
+        planning_step_m=settings.planning_step_m / 2,
+        rtol=settings.rtol / 10,
+        position_atol_m=settings.position_atol_m / 10,
+        speed_atol_mps=settings.speed_atol_mps / 10,
+        work_atol_j=settings.work_atol_j / 10,
+    )
+
+
 @dataclass
 class SegmentResult:
     time_s: np.ndarray
@@ -31,6 +45,8 @@ class SegmentResult:
     termination: str
     command: Command
     dh_ds: float
+    # Local cumulative potential generation, actual wheel recovery, auxiliary reuse.
+    electrical_integrals_j: np.ndarray | None = None
 
 
 def integrate_segment(
@@ -45,6 +61,7 @@ def integrate_segment(
     initial_work_j: tuple[float, float, float] = (0.0, 0.0, 0.0),
     end_position_m: float | None = None,
     settings: Settings = Settings(),
+    electrical: ElectricalParameters | None = None,
 ) -> SegmentResult:
     """Terminate at duration, a distance boundary, or the first downward v=0 event.
     Trial RK stages may cross zero; the RHS is extended there for event location.
@@ -71,8 +88,13 @@ def integrate_segment(
     def rhs(_time, state):
         speed = max(float(state[1]), 0.0)  # trial-stage extension only
         force = forces(vehicle, speed, dh_ds, command)
-        return [speed, force.acceleration_mps2, force.traction_n * speed,
-                force.brake_n * speed, force.resistance_n * speed]
+        derivatives = [speed, force.acceleration_mps2, force.traction_n * speed,
+                       force.brake_n * speed, force.resistance_n * speed]
+        if electrical is not None:
+            recovery = regenerative_powers(electrical, force.brake_n, speed)
+            derivatives.extend([recovery.potential_generation_w, recovery.wheel_power_w,
+                                recovery.auxiliary_reuse_w])
+        return derivatives
 
     def stopped(_time, state):
         return state[1]
@@ -102,6 +124,8 @@ def integrate_segment(
     power_transition.terminal = True
     power_transition.direction = 0
     state = np.array([initial_position_m, initial_speed_mps, *initial_work_j], dtype=float)
+    if electrical is not None:
+        state = np.concatenate((state, np.zeros(3)))
     time = initial_time_s
     final_time = initial_time_s + duration_s
     times, states = [], []
@@ -112,8 +136,8 @@ def integrate_segment(
         active_events = events + ([power_transition] if transition_pending else [])
         sol = solve_ivp(rhs, (time, final_time), state, method="DOP853", events=active_events,
                         rtol=settings.rtol, atol=[settings.position_atol_m, settings.speed_atol_mps,
-                                                 *([settings.work_atol_j] * 3)], max_step=settings.max_step_s)
-        if not sol.success or not np.isfinite(sol.y).all():
+                                                 *([settings.work_atol_j] * (len(state) - 2))], max_step=settings.max_step_s)
+        if not sol.success or not np.isfinite(sol.y).all() or not np.isfinite(sol.t).all():
             raise RuntimeError(f"Time integration failed: {sol.message}")
         start = 1 if times else 0
         times.extend(sol.t[start:])
@@ -126,7 +150,9 @@ def integrate_segment(
         if hit is not None:
             termination = "stopped" if hit == 0 else "position"
         break
-    result = SegmentResult(np.asarray(times), np.asarray(states).T, termination, command, dh_ds)
+    array = np.asarray(states).T
+    result = SegmentResult(np.asarray(times), array[:5], termination, command, dh_ds,
+                           array[5:] if electrical is not None else None)
     if result.states[1].min() < -10 * settings.speed_atol_mps:
         raise RuntimeError("Negative speed outside zero-event tolerance")
     return result
