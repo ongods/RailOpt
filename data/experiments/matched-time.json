@@ -1,0 +1,20 @@
+{
+  "experiment_id": "synthetic-1km-matched-85s-v1",
+  "scope": "Hypothetical rest-to-rest 1 km matched-arrival study. Best feasible tested controls only; no global optimality, calibrated LRT-2 performance or measured savings claim.",
+  "scenario_file": "data/scenarios/synthetic-1km.json",
+  "target_time_s": 85.0,
+  "arrival_tolerance_s": 0.1,
+  "cruise_speed_caps_mps": [12, 14, 16, 18, 20],
+  "coast_positions_m": [100, 200, 300, 400, 500, 600, 700, 800, 900],
+  "crossing_iterations": 9,
+  "search_energy_tolerance_j": 100000,
+  "ranking_tolerance_j": 100,
+  "robustness": {
+    "auxiliary_power_w": [50000, 100000, 150000],
+    "regenerative_acceptance_fraction": [0, 0.5, 1]
+  },
+  "evidence": {
+    "status": "hypothetical experiment design",
+    "basis": "Declared 2026-10-18 in docs/experiments.md. 85 s +/- 0.1 s is a synthetic target, not a timetable. Cap/coast bounds are search choices; both grid spacings are halved and observed cap/time crossings bisected nine times. Search stability uses 0.1 MJ (about 0.028 kWh), distinct from integration tolerance. Robustness replays fixed controls; ranges are not confidence intervals. All physical/electrical inputs inherit scenario provenance."
+  }
+}
