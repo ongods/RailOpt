@@ -1,0 +1,124 @@
+{
+  "project": "RailOpt - original LRT-2 four-car MC1-M1-M2-MC2 longitudinal dynamics",
+  "compiled_on": "2026-10-18",
+  "scope": "Historical original train reference and nominal eastbound Gilmore to Betty Go-Belmonte interstation segment. Not a representation of all 2026 trainsets, restrictions, or measured operations.",
+  "source_catalog": {
+    "jica_2011": {
+      "title": "Preparatory Study for LRT Line 2 Extension Project, Final Report",
+      "publisher": "JICA / Oriental Consultants / Katahira & Engineers International / Tonichi Engineering Consultants",
+      "date": "2011-10",
+      "url": "https://openjicareport.jica.go.jp/pdf/1000023377_01.pdf",
+      "relevant_pages_printed": ["3-4", "3-24", "3-41", "3-42"],
+      "notes": "Tables 3.1-2, 3.4-6, 3.6-1, 3.6-2; specifies original train and historic design criteria, not recorded force-speed performance."
+    },
+    "lrta_distance": {
+      "title": "Distance Between Stations - Line 1 and 2",
+      "publisher": "Light Rail Transit Authority",
+      "url": "https://www.lrta.gov.ph/distance-between-stations/",
+      "notes": "Published station-to-station nominal distance; reference points/stopping marks and direction-specific chainage unverified."
+    },
+    "lrta_2021_foi": {
+      "title": "Rolling Stock Information for LRT-1 and LRT-2",
+      "publisher": "Light Rail Transit Authority FOI",
+      "date": "2021-01-25",
+      "url": "https://www.foi.gov.ph/requests/rolling-stock-information-for-lrt-1-and-lrt-2/",
+      "status": "successful; attachment linked but not recovered",
+      "attachment_name": "img-125091420.pdf",
+      "attachment_url": "https://www.foi.gov.ph/documents/51680/img-125091420.pdf",
+      "notes": "Request concerned tractive effort, motor power, auxiliary power, efficiencies. Attachment returned HTTP 503 during this investigation: contents unverified."
+    },
+    "lrta_2023_energy_foi": {
+      "title": "Request for the hourly Energy Consumption of LRT 2",
+      "publisher": "Light Rail Transit Authority FOI",
+      "date": "2023-12-11",
+      "url": "https://www.foi.gov.ph/requests/request-for-the-hourly-energy-consumption-of-lrt-2/",
+      "status": "successful; attachment linked but not recovered",
+      "attachment_name": "Ventura.pdf",
+      "attachment_url": "https://www.foi.gov.ph/documents/331228/Ventura.pdf",
+      "notes": "10/22/2023-10/31/2023 requested. Attachment returned HTTP 503 during this investigation. Meter boundary unknown."
+    },
+    "lrta_2023_operations_foi": {
+      "title": "LRT-2 Ridership and Train Data for September 2023",
+      "publisher": "Light Rail Transit Authority FOI",
+      "date": "2024-01-08",
+      "url": "https://www.foi.gov.ph/requests/lrt-2-ridership-and-train-data-for-september-2023/",
+      "status": "successful; attachment linked, not inspected",
+      "notes": "Requester asked hourly station counts, running trains/headways, average interstation travel time. No speed-time trace verified."
+    },
+    "lrta_2005_asbuilt_lead": {
+      "title": "LRT Line 2, Final As-Built Drawings, Trackworks",
+      "publisher": "Light Rail Transit Authority",
+      "date": "2005-03",
+      "url": null,
+      "citation_source": "JICA 2011 Table 3.1-2",
+      "status": "cited reference only; actual as-built drawings not recovered"
+    }
+  },
+  "documented_values": [
+    {"key": "formation", "value": "MC1-M1-M2-MC2", "unit": null, "source_id": "jica_2011", "page": "3-42", "classification": "historical_design_specification"},
+    {"key": "total_motor_cars", "value": 4, "unit": "cars", "source_id": "jica_2011", "page": "3-41", "classification": "historical_design_specification"},
+    {"key": "mass_aw0", "value": 160100, "unit": "kg", "source_id": "jica_2011", "page": "3-41", "classification": "reported_train_mass"},
+    {"key": "mass_aw1", "value": 175180, "unit": "kg", "source_id": "jica_2011", "page": "3-41", "classification": "reported_train_mass"},
+    {"key": "mass_aw1_plus_3_standing_per_m2", "value": 213790, "unit": "kg", "source_id": "jica_2011", "page": "3-41", "classification": "reported_train_mass"},
+    {"key": "mass_aw2_4_standing_per_m2", "value": 227050, "unit": "kg", "source_id": "jica_2011", "page": "3-41", "classification": "reported_train_mass", "caution": "JICA Tables 3.6-1 and 3.6-2 disagree on AW2 passenger total (1030 versus 1026)."},
+    {"key": "mass_aw3_7_standing_per_m2", "value": 265920, "unit": "kg", "source_id": "jica_2011", "page": "3-41", "classification": "reported_train_mass"},
+    {"key": "passenger_mass_assumed", "value": 65, "unit": "kg/passenger", "source_id": "jica_2011", "page": "3-41", "classification": "study_assumption"},
+    {"key": "maximum_design_speed", "value": 80, "unit": "km/h", "source_id": "jica_2011", "page": "3-42", "classification": "design_rating"},
+    {"key": "average_acceleration_design", "value": 1.3, "unit": "m/s^2", "source_id": "jica_2011", "page": "3-42", "classification": "design_rating", "caution": "Both average and maximum acceleration are tabulated as 4.68 km/h/s; reference speed range and loading not shown."},
+    {"key": "maximum_acceleration_design", "value": 1.3, "unit": "m/s^2", "source_id": "jica_2011", "page": "3-42", "classification": "design_rating", "caution": "Not a speed-dependent capability curve."},
+    {"key": "average_service_deceleration_design", "value": 1.3, "unit": "m/s^2", "source_id": "jica_2011", "page": "3-42", "classification": "design_rating"},
+    {"key": "emergency_deceleration_design", "value": 1.5, "unit": "m/s^2", "source_id": "jica_2011", "page": "3-42", "classification": "design_rating", "caution": "Do not treat as nominal service braking."},
+    {"key": "motor_rating_per_motor", "value": 120, "unit": "kW", "source_id": "jica_2011", "page": "3-42", "classification": "design_rating", "caution": "Nameplate motor rating; not pantograph input or wheel power. Exact motor count and duty definition require corroboration."},
+    {"key": "traction_supply_nominal", "value": 1500, "unit": "V DC", "source_id": "jica_2011", "page": "3-41", "classification": "design_rating"},
+    {"key": "new_wheel_diameter", "value": 850, "unit": "mm", "source_id": "jica_2011", "page": "3-42", "classification": "design_rating"},
+    {"key": "worn_wheel_diameter", "value": 790, "unit": "mm", "source_id": "jica_2011", "page": "3-42", "classification": "design_rating"},
+    {"key": "interstation_distance_gilmore_to_betty", "value": 1075, "unit": "m", "source_id": "lrta_distance", "classification": "published_station_distance", "caution": "Reference endpoints, stop-mark positions and direction-specific chainage not verified."},
+    {"key": "station_grade_gilmore", "value": 0, "unit": "percent", "source_id": "jica_2011", "page": "3-4", "classification": "historical_track_geometry", "caution": "Inference by exclusion: report says only elevated Anonas and J. Ruiz stations use nonzero 0.35% station grade; all other elevated stations have zero. Not a segment grade."},
+    {"key": "station_grade_betty_go_belmonte", "value": 0, "unit": "percent", "source_id": "jica_2011", "page": "3-4", "classification": "historical_track_geometry", "caution": "As above; not a segment grade."},
+    {"key": "maximum_design_line_grade", "value": 5, "unit": "percent", "source_id": "jica_2011", "page": "3-4", "classification": "historical_track_geometry", "caution": "Applied between Anonas and Katipunan; not an observed grade at Gilmore-Betty."},
+    {"key": "desired_min_horizontal_curve_radius", "value": 250, "unit": "m", "source_id": "jica_2011", "page": "3-4", "classification": "historical_track_geometry"},
+    {"key": "absolute_min_horizontal_curve_radius", "value": 175, "unit": "m", "source_id": "jica_2011", "page": "3-4", "classification": "historical_track_geometry", "caution": "Stated to be applied only in Recto-Legarda-Pureza section."},
+    {"key": "tangent_track_speed_limit_design", "value": 80, "unit": "km/h", "source_id": "jica_2011", "page": "3-4", "classification": "historical_speed_regulation"},
+    {"key": "r250_curve_speed_limit_design", "value": 60, "unit": "km/h", "source_id": "jica_2011", "page": "3-4", "classification": "historical_speed_regulation"},
+    {"key": "r175_curve_speed_limit_design", "value": 45, "unit": "km/h", "source_id": "jica_2011", "page": "3-4", "classification": "historical_speed_regulation"},
+    {"key": "approach_to_station_speed_regulation", "value": 30, "unit": "km/h", "source_id": "jica_2011", "page": "3-4", "classification": "historical_speed_regulation", "caution": "No chainage of application or distance upstream of stopping mark provided."},
+    {"key": "system_train_km_2010", "value": 1472212, "unit": "train-km", "source_id": "jica_2011", "page": "3-24", "classification": "historical_aggregate_observation"},
+    {"key": "system_electric_consumption_2010_reported", "value": 27600237, "unit": "kWh", "source_id": "jica_2011", "page": "3-24", "classification": "historical_aggregate_observation", "caution": "Metering boundary and inclusion of station/depot/auxiliary loads not specified. Not mechanical train energy."}
+  ],
+  "derived_values": [
+    {
+      "key": "system_reported_kwh_per_train_km_2010",
+      "value": 18.7474609635,
+      "unit": "kWh/train-km",
+      "calculation": "27600237 / 1472212",
+      "from_source_id": "jica_2011",
+      "classification": "calculated_aggregate_ratio",
+      "caution": "Do NOT calibrate train mechanical/traction consumption directly to this without confirming power measurement boundary and accounting for infrastructure loads."
+    },
+    {
+      "key": "motor_nameplate_sum_if_sixteen_motors",
+      "value": 1920,
+      "unit": "kW at motor shafts (conditional)",
+      "calculation": "16 * 120",
+      "from_source_id": "jica_2011",
+      "classification": "conditional_derived_value",
+      "caution": "Sixteen-motor count is corroborated in secondary LRTA 2000 class descriptions citing a 2017 LRTA TOR, but original 2017 document was not recovered in this pass. Not wheel power nor electrical input."
+    }
+  ],
+  "missing_for_high_fidelity_model": {
+    "traction": ["wheel tractive effort versus speed", "short-time versus continuous traction curves", "validated motor count and nameplate duty", "inverter voltage/current limits and supply derating", "traction gear ratio and efficiency from primary source"],
+    "braking": ["service braking force versus speed and passenger load", "regenerative/friction blending law", "low-speed cutoff", "command delay", "jerk limits"],
+    "resistance_inertia": ["LRT-2-specific Davis/coast-down coefficients with units", "rotating mass factor", "drivetrain equivalent inertia"],
+    "track": ["rail-level chainage/elevation and grade breakpoints for Gilmore-Betty", "actual horizontal curve radii and cant over the segment", "chainaged 30km/h approach restriction", "stopping mark definition and dates of validity"],
+    "validation": ["independent single-run speed-versus-time or speed-versus-distance traces at known load/configuration", "provenance-preserved calibration and holdout runs"],
+    "electrical_optional": ["pantograph-side voltage/current or imported/exported energy", "auxiliary power under specified HVAC state", "substation/meter boundary and regenerative receptivity"]
+  },
+  "source_quality_warnings": [
+    "JICA Tables 3.6-1 and 3.6-2 list incompatible AW2 capacities (1,030 vs 1,026); retain both and do not silently reconcile.",
+    "AW4 332.4 tonnes is a structural dynamic load designation (AW3 plus 0.25g), not a valid real train mass for F=ma.",
+    "The speed regulations in JICA Table 3.1-2 are historical design/operating-rule references, not verified 2026 on-track restrictions.",
+    "LRTA station-to-station distance should not be represented as surveyed chainage from opposing stopping marks.",
+    "Successful FOI requests are leads to attachments, not proof of numerical contents before download and inspection.",
+    "Data on modern refurbished or replacement trains must not be mixed with original Toshiba/Hyundai Rotem configuration without configuration management."
+  ]
+}

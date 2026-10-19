@@ -6,7 +6,12 @@
     "status": "cached",
     "sha256": "effac040d8a1bdca33b973b93bb5b30768cae14ed1f8d2a5dea59c5882db2361",
     "bytes": 6236121,
-    "cache_path": ".cache/research/jica-2011-lrt2.pdf"
+    "cache_path": ".cache/research/jica-2011-lrt2.pdf",
+    "additional_review": {
+      "date": "2026-10-18",
+      "visually_reviewed_pdf_pages": [122, 142, 160],
+      "purpose": "Check public-data compilation; Table 3.4-6 adds historical system totals with unspecified meter boundary"
+    }
   },
   {
     "source_id": "lrta-2017-maintenance-tor",
@@ -41,7 +46,8 @@
     "url": "https://www.foi.gov.ph/documents/51680/img-125091420.pdf",
     "checked_at_utc": "2026-10-17T07:23:27.580833+00:00",
     "status": "unavailable",
-    "error": "403 Client Error: Forbidden for url: https://www.foi.gov.ph/documents/51680/img-125091420.pdf"
+    "error": "403 Client Error: Forbidden for url: https://www.foi.gov.ph/documents/51680/img-125091420.pdf",
+    "latest_review": {"date": "2026-10-18", "method": "browser fetch via public FOI attachment link", "status": "unavailable", "error": "503 Service Unavailable"}
   },
   {
     "source_id": "toshiba-2003-highlights",
@@ -85,5 +91,44 @@
     "sha256": "9298b01f18714df95e777e7082e07966248a240424e3e84c087cb2acd77bff3d",
     "bytes": 5904745,
     "cache_path": ".cache/research/jica-2011-lrt2-part2.pdf"
+  },
+  {
+    "source_id": "lrta-station-distances",
+    "url": "https://www.lrta.gov.ph/distance-between-stations/",
+    "checked_on": "2026-10-18",
+    "status": "reviewed_web",
+    "locator": "Line 2 System row Gilmore - Betty Go-Belmonte: 1075 meters / 1.075 kilometers",
+    "qualification": "Publication date and stopping-mark/direction-specific endpoints not established; nominal distance only"
+  },
+  {
+    "source_id": "lrta-2023-energy-foi",
+    "url": "https://www.foi.gov.ph/requests/request-for-the-hourly-energy-consumption-of-lrt-2/",
+    "checked_on": "2026-10-18",
+    "status": "reviewed_web",
+    "tracking_number": "LRTA-626649017650",
+    "qualification": "Successful response and attachment link reviewed; numerical contents and meter boundary unverified"
+  },
+  {
+    "source_id": "lrta-2023-energy-foi-attachment",
+    "url": "https://www.foi.gov.ph/documents/331228/Ventura.pdf",
+    "checked_on": "2026-10-18",
+    "status": "unavailable",
+    "error": "503 Service Unavailable via browser fetch"
+  },
+  {
+    "source_id": "lrta-2023-operations-foi",
+    "url": "https://www.foi.gov.ph/requests/lrt-2-ridership-and-train-data-for-september-2023/",
+    "checked_on": "2026-10-18",
+    "status": "reviewed_web",
+    "tracking_number": "LRTA-813195926902",
+    "qualification": "Successful response lists station/hourly traffic attachment; requested interstation times are not verified observations"
+  },
+  {
+    "source_id": "lrta-2023-operations-foi-attachment",
+    "url": "https://www.foi.gov.ph/documents/130683/Daily_ENTRY_EXIT_Traffic_Per_Station_Hourly_Traffic_Sept2023Official.pdf",
+    "checked_on": "2026-10-18",
+    "status": "unavailable",
+    "final_url": "https://www.foi.gov.ph/documentview/view/None/",
+    "error": "Redirected to unavailable-document page; no PDF contents obtained"
   }
 ]

@@ -22,7 +22,7 @@ def main():
         with pdfium.PdfDocument(ROOT / source["cache_path"]) as document:
             chunks = []
             selected = {
-                "jica-2011-lrt2": {122, 143, 159, 160},
+                "jica-2011-lrt2": {122, 142, 143, 159, 160},
                 "jica-lrt2-japanese-report": {178, 179},
                 "jica-2011-lrt2-part2": {195, 196, 199, 201, 202, 203, 204, 205, 206, 207},
             }.get(source_id, set())

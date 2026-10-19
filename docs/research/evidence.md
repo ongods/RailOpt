@@ -1,14 +1,14 @@
 # Evidence: historical LRT-2 performance and route geometry
 
-Reviewed 17 October 2026. This consolidates the data review and follow-up evidence dossier. The selected vehicle remains the original four-car LRT-2 train documented in 2011. No present-day fleet calibration is claimed. Current implementation and verification results are in [verification.md](../verification.md).
+Evidence reviewed 17–18 October 2026. The selected vehicle is the original four-car LRT-2 train documented in 2011. No present-day fleet calibration is claimed. Numerical checks are documented separately in [verification.md](../verification.md).
 
 ## Evidence obtained
 
-Two additional primary PDFs were downloaded, hashed, text-extracted and selected pages visually inspected. This brings the local cache to four PDFs, representing the English study in two parts, its Japanese edition, and a separate Toshiba note. The study editions are not independent observations. Exact URLs, byte counts, SHA-256 hashes and access outcomes are in the [manifest](source-manifest.json).
+The reviewed primary PDFs were downloaded, hashed and text-extracted, with selected pages visually inspected. Four PDFs represent the English study in two parts, its Japanese edition, and a separate Toshiba note. The study editions are not independent observations. Exact URLs, byte counts, SHA-256 hashes and access outcomes are in the [manifest](source-manifest.json).
 
 The earlier checks covered the [English JICA Part 1](https://openjicareport.jica.go.jp/pdf/1000023377_01.pdf), PDF pages 122, 143, 159 and 160, for historical geometry categories, loading and specifications. The [Toshiba 2003 engineering note](https://www.global.toshiba/content/dam/toshiba/migration/corp/techReviewAssets/tech/review/2003/high2003/high2003pdf/0305.pdf), PDF page 3 / printed 19, independently corroborates the four-motored-car formation and supplier. It contains no usable whole-train wheel-force/power limit.
 
-| Source | Visually inspected pages in this follow-up | Purpose and status |
+| Source | Visually inspected pages | Purpose and status |
 | --- | --- | --- |
 | [JICA Japanese report](https://openjicareport.jica.go.jp/pdf/1000023375.pdf) | PDF 178–179; printed 3-46 and 3-47 | Verified transcription of historical vehicle specifications; useful qualifications absent from the English summary |
 | [JICA English Part 2](https://openjicareport.jica.go.jp/pdf/1000023377_02.pdf) | PDF 196 and 201–207; drawing index G-1 and plan/profile E-3 through E-9 | Verified contents of proposed extension drawings; applicability to an actual operating alignment is unverified |
@@ -31,7 +31,7 @@ The following are verified published specifications, not measurements. English i
 
 The English table calls its deceleration entry an average; the Japanese table provides the service/emergency distinction and loading qualification. Neither wording defines a complete speed-dependent braking law. The Japanese edition also repeats the AW2 inconsistency already recorded in the [conflict register](source-conflicts.csv); it does not repair it.
 
-The [vehicle reference](../../data/reference/lrt2-2011.json) is now revision v2, and the [parameter register](../parameter-register.csv) records the clarified loading, rating duty, emergency entry and brake architecture. Its status vocabulary remains unchanged: published specification means verified source transcription; derived means arithmetic conditional on those inputs; assumed means hypothetical scenario choice; unresolved means no defensible value has been assigned.
+The [vehicle reference](../../data/reference/lrt2-vehicle.json) is now revision v2, and the [parameter register](../parameter-register.csv) records the clarified loading, rating duty, emergency entry and brake architecture. Its status vocabulary remains unchanged: published specification means verified source transcription; derived means arithmetic conditional on those inputs; assumed means hypothetical scenario choice; unresolved means no defensible value has been assigned.
 
 ### What the acceleration anchor can constrain
 
@@ -80,12 +80,40 @@ Comparable resistance sources remain methodological leads: [Rochard and Schmid](
 
 These searches did not establish a fleet-specific Davis coefficient set, a complete wheel-traction or service-brake curve, an as-built profile for the candidate section, or an independent trajectory with loading and control context. That is the bounded result of this audit, not a claim that such records do not exist.
 
-## Evidence gate and next acquisition step
+## Unresolved inputs and validation evidence
 
-The evidence now supports more precise historical labels and a proposed-design geometry lead. It still supports only synthetic numerical verification for the first simulator milestone, not calibrated real-route energy estimates.
+The evidence supports historical specifications and a proposed-design geometry lead. It supports synthetic numerical verification, not calibrated real-route energy estimates.
 
-The smallest useful next acquisition is one consistent dataset for the original train: wheel traction versus speed with load/voltage/duty conditions; service-brake and regenerative capability versus speed; coasting or resistance data; and one direction's as-built rail chainage, elevation and restrictions. A matched, independent trajectory is needed for later physical validation. [The data-request draft](data-request-draft.md) specifies these fields and acceptable alternatives. It has not been sent.
+The remaining useful evidence is one consistent dataset for the original train: wheel traction versus speed with load/voltage/duty conditions; service-brake and regenerative capability versus speed; coasting or resistance data; and one direction's rail chainage, elevation and restrictions. A matched independent trajectory is needed for later physical validation. The [18 October public-data review](public-data-review.md) records which gaps the supplied compilation partially fills. Synthetic verification can continue with public evidence, explicit assumptions and sensitivity analysis without awaiting a new agency response.
 
-Reproduce downloads and page rendering using the [search log](search-log.md). The source cache and rendered images are local, ignored research files. Hashes identify the reviewed PDFs; hashes alone do not prove a parameter's applicability.
+Source acquisition and page-rendering commands are in the [development guide](../development.md#research-utilities). The source cache and rendered images are local, ignored research files. Hashes identify the reviewed PDFs; hashes alone do not prove a parameter's applicability.
 
-The original research audit checked the signatures, byte counts and SHA-256 hashes of all four cached PDFs, the 37-row parameter register, and the mass/conversion/drawing arithmetic above. Current numerical verification is maintained separately in [verification.md](../verification.md). Neither transcription checks nor numerical convergence establish physical validation.
+The original research audit checked the signatures, byte counts and SHA-256 hashes of all four cached PDFs, the parameter register, and the mass/conversion/drawing arithmetic above. Current numerical verification is maintained separately in [verification.md](../verification.md). Neither transcription checks nor numerical convergence establish physical validation.
+
+## Vehicle selection and required inputs
+
+LRT-2 is the historical reference because important loading and vehicle specifications are documented together. A runnable scenario still requires explicitly qualified inputs; the case-study railway is not a validated operational model.
+
+### Railway applicability
+
+| Target | Public technical evidence reviewed | Limitation and decision |
+| --- | --- | --- |
+| LRT-2 | JICA's 2011 study links configuration, loading, propulsion and performance; its Japanese edition adds loading and motor-duty qualifications. | Historical specifications do not establish current force curves. First choice because important inputs are documented together. |
+| LRT-1 | JICA's 2013 Volume 1 appendix, Table 3-1, separates three historical vehicle generations. | A single generation/year must be selected. Close second; do not mix generations. |
+| MRT-3 | DOTr system description, JICA rehabilitation reporting and historical comparison tables provide context. | Choose a specific Czech or Dalian vehicle and consist. An FOI success page whose specifications were emailed is not an accessible parameter dataset. More verification is needed in this evidence set. |
+
+
+### Required input evidence
+
+| Required input | Purpose | Evidence status |
+| --- | --- | --- |
+| Composition, empty mass, passenger mass and count | Actual train mass and gravity | Original four-car tare is 160,100 kg. The report uses 65 kg/person. Occupancy is a scenario convention without observations. |
+| Equivalent rotating mass | Effective inertia and kinetic energy | Unresolved for LRT-2; separately assumed in scenarios, without scaling with passenger mass. |
+| Wheel traction versus speed | Attainable acceleration and power | Full curve unresolved. Scenarios declare finite low-speed force and wheel-power limits. |
+| Service-brake envelope | Deceleration, stopping and holding | Nominal service anchor known; force curve, blending and delays unresolved. Constant force is an explicit first approximation. |
+| Whole-train running resistance | Coasting and losses | Local Davis coefficients unresolved. Keep whole-train SI coefficients separate from per-tonne/km/h formulations. |
+| Track distance, rail height, stops and speed restrictions | Geometry, gravity and constraints | No complete as-built candidate profile established. Ground elevation and station-centroid spacing are insufficient. |
+| Initial conditions and controls | Reproducible experiment | Declared scenario inputs; service braking takes priority over the coast request. |
+| Extra curve/tunnel effects and adhesion, if modelled | Refine applicability | Not separately implemented. Non-slipping wheel-force limits and no additional curve/tunnel forces are explicit assumptions. |
+| Efficiency, auxiliaries, regenerative capability and acceptance | Electrical boundary only | Fleet values unresolved; optional electrical accounting uses explicitly hypothetical scenario inputs. |
+| Independent trajectories and metered energy | Physical validation | Not available in this evidence set. Specifications and annual totals are insufficient. |

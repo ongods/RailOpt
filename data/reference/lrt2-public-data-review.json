@@ -1,0 +1,85 @@
+{
+  "review_date": "2026-10-18",
+  "input_file": "data/reference/lrt2-public-data.json",
+  "input_sha256": "0d1eee6915143e8b6f3fc4181934d2471e286140c861b754422e545413a34442",
+  "scope": "Review of a user-supplied public-source compilation; not a runnable scenario. Verified means source transcription, not physical validation. Original input is preserved unchanged.",
+  "verdict": "Partially fills nominal station spacing and adds historical context. Does not resolve wheel-force/power curves, resistance/inertia, full segment geometry, electrical parameters or independent validation observations.",
+  "accepted_supplemental_values": {
+    "nominal_gilmore_betty_spacing_m": {
+      "value": 1075,
+      "status": "verified",
+      "source_url": "https://www.lrta.gov.ph/distance-between-stations/",
+      "locator": "Line 2 System row Gilmore - Betty Go-Belmonte",
+      "applicability": "Published nominal spacing; publication date and reference endpoints not stated",
+      "limitation": "Not direction-specific stopping-mark distance or surveyed chainage; no complete route profile"
+    },
+    "nominal_supply_voltage_v": {
+      "value": 1500,
+      "status": "verified",
+      "source_url": "https://openjicareport.jica.go.jp/pdf/1000023377_01.pdf",
+      "locator": "Table 3.6-2 PDF 160; text PDF 159",
+      "applicability": "Historical original LRT-2 four-car train documented 2011",
+      "limitation": "Nominal DC rating; not measured voltage or an electrical power/efficiency limit"
+    },
+    "new_wheel_diameter_m": {
+      "value": 0.85,
+      "status": "verified",
+      "source_url": "https://openjicareport.jica.go.jp/pdf/1000023377_01.pdf",
+      "locator": "Table 3.6-2 PDF 160: 850 mm",
+      "applicability": "Historical original train design rating",
+      "limitation": "Not operating wheel condition; insufficient for force inference without torque/gearing"
+    },
+    "worn_wheel_diameter_m": {
+      "value": 0.79,
+      "status": "verified",
+      "source_url": "https://openjicareport.jica.go.jp/pdf/1000023377_01.pdf",
+      "locator": "Table 3.6-2 PDF 160: literal English label Worm 790; interpreted as worn wheel",
+      "applicability": "Historical original train design rating",
+      "limitation": "Not a measured current wheel condition"
+    },
+    "reported_train_km_2010": {
+      "value": 1472212,
+      "unit": "train-km",
+      "status": "verified",
+      "source_url": "https://openjicareport.jica.go.jp/pdf/1000023377_01.pdf",
+      "locator": "Table 3.4-6 PDF 142 / printed 3-24; visually reviewed",
+      "applicability": "System aggregate for 2010",
+      "limitation": "No matched interstation trajectory or loading/control context"
+    },
+    "reported_electricity_2010_j": {
+      "value": 99360853200000,
+      "status": "verified",
+      "source_url": "https://openjicareport.jica.go.jp/pdf/1000023377_01.pdf",
+      "locator": "Table 3.4-6 PDF 142 / printed 3-24: 27600237 kWh multiplied by 3600000 J/kWh",
+      "applicability": "System aggregate for 2010",
+      "limitation": "Meter boundary unspecified; do not calibrate train-terminal energy or infer auxiliary/traction efficiency"
+    },
+    "aggregate_j_per_train_km_2010": {
+      "value": 67490859.46860914,
+      "status": "derived",
+      "source_url": "https://openjicareport.jica.go.jp/pdf/1000023377_01.pdf",
+      "locator": "27600237 * 3600000 / 1472212; 18.74746096350254 kWh/train-km",
+      "applicability": "Ratio of reported 2010 system totals",
+      "limitation": "Boundary differs from or is not known to match the simulator; not a calibration target"
+    }
+  },
+  "qualification_corrections": [
+    "Performance loading is unspecified in the English summary but the already-reviewed Japanese edition Table 3.6-2 PDF 179 establishes AW3; preserve that stronger qualification.",
+    "The already-reviewed Japanese edition establishes one-hour duty for 120 kW per motor. Motor count and aggregate wheel power remain unresolved.",
+    "Zero grades at Gilmore and Betty are historical inferences from elevated-station categories in PDF 122, not a flat interstation profile or equal station elevations.",
+    "175180 kg AW1 is consistent with 232 seated passengers at 65 kg, but these are loading conventions rather than observed masses.",
+    "227050 kg AW2 follows 1030 passengers; 1026 implies 226790 kg. Retain the existing conflict and exclude AW2 from active scenarios.",
+    "The conditional 16 * 120 kW = 1.92 MW shaft total is arithmetically correct. Its sixteen-motor premise has no recovered primary source here and must not replace wheel power."
+  ],
+  "unresolved_simulator_inputs": [
+    "wheel traction force versus speed and applicable wheel power",
+    "service and regenerative brake envelopes and low-speed behavior",
+    "whole-train resistance and equivalent rotating inertia",
+    "rail-level segment profile and direction-specific stopping marks",
+    "chainaged current speed restrictions",
+    "motoring/regenerative efficiencies and auxiliary power",
+    "actual regenerative acceptance and metered energy boundary",
+    "independent time/speed/distance and energy validation observations"
+  ],
+  "active_scenario_changes_from_scrape": "None; public context is retained separately from hypothetical solver inputs."
+}
